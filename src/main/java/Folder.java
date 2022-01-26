@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 public class Folder implements FileItem {
-    private String folderName;
-    private ArrayList<FileItem> items;
+    private final String folderName;
+    private final ArrayList<FileItem> items;
 
     // Create a folder given the folderName
     public Folder(String folderName) {
         this.folderName = folderName;
-        this.items = new ArrayList<FileItem>();
+        this.items = new ArrayList<>();
     }
 
     // Add a FileItem to the folder
@@ -24,8 +24,7 @@ public class Folder implements FileItem {
         // Use recursion to count the files
         // We don't need a base case because the
         // files are the "base case"
-        for (int i = 0; i < items.size(); i++) {
-            FileItem item = items.get(i);
+        for (FileItem item : items) {
             count += item.countFiles();
         }
 
@@ -42,8 +41,16 @@ public class Folder implements FileItem {
     // Then, the size of folder1 = 512 + 128*3 + 200 + 300 + 150 = 1546.
     public int calculateSize() {
         // YOUR CODE HERE
-        return -1;
+
+        int folderSize = 512;
+
+        for (FileItem item : items) {
+            folderSize += 128 + item.calculateSize();
+        }
+
+        return folderSize;
     }
+
 
     // Creates a copy of the current FileItem
     // We will need to copy the folder and then copy all the
@@ -56,7 +63,14 @@ public class Folder implements FileItem {
     // that the contents of the folder is copied as well.
     public FileItem copy() {
         // YOUR CODE HERE
-        return null;
+
+        Folder newFolder = new Folder(this.folderName + "_copy");
+
+        for (FileItem item : items) {
+            newFolder.addToFolder(item.copy());
+        }
+
+        return newFolder;
     }
 
     // toString method
